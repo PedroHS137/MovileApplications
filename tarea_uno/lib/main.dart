@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -24,9 +26,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
   bool _seen = false;
+  DateTime now = DateTime.now();
   @override
   Widget build(BuildContext context) {
+    var _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Click the FAB'),
         actions: <Widget>[
@@ -41,8 +46,18 @@ class _HomePageState extends State<HomePage> {
               setState(() {
                 _seen = !_seen;
               });
+              if(_counter%2==0){
+                _scaffoldKey.currentState
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text("SnackBar Normal") ,));
+              }else{
+                 _scaffoldKey.currentState
+                 ..hideCurrentSnackBar()
+                 ..showSnackBar(SnackBar(content: Text("SnackBar date: $now"),action: SnackBarAction(label: "Exit", onPressed: (){SystemNavigator.pop();}),));
+              }
+              //_scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("SnackBar"),duration:Duration(seconds: 1) ,));
             },
-            color: Colors.grey,
+            //color: Colors.grey,
             // child: Text(
             //   "click me",
             //   style: TextStyle(color: Colors.black),
@@ -57,7 +72,7 @@ class _HomePageState extends State<HomePage> {
             Text("count: $_counter"),
             // MaterialButton(onPressed: () {
             //   _counter++;
-            //   print("$_counter");
+            //print("$_counter");
             //   setState(() {
 
             //   });
